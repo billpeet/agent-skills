@@ -7,6 +7,7 @@ A collection of [Agent Skills](https://agentskills.io) for Claude Code and Claud
 | Skill | Description |
 |-------|-------------|
 | [youtrack](skills/youtrack/) | Manage YouTrack issues, projects, and users via the `yt` CLI |
+| [azdevops](skills/azdevops/) | Manage Azure DevOps projects, repos, PRs, pipelines, and work items via the `azdevops` CLI |
 
 ## Installation
 
