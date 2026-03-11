@@ -85,7 +85,10 @@ Use `mssql sql` for SELECT queries. This command **blocks** any statements that 
 mssql sql --query "SELECT TOP 10 * FROM Users" --format json --pretty
 mssql sql --query "SELECT COUNT(*) AS total FROM Orders WHERE Status = 'Pending'" --format json
 mssql sql --query "SELECT u.Name, COUNT(o.Id) AS OrderCount FROM Users u JOIN Orders o ON u.Id = o.UserId GROUP BY u.Name" --server mydb --format json --pretty
+mssql sql --file report.sql --format json --pretty
 ```
+
+Use `--query` for inline SQL or `--file` to read SQL from a `.sql` file. These options are mutually exclusive.
 
 Results are limited to the configured `maxRows` (default 100). If more rows exist, the output includes a truncation warning.
 
@@ -100,7 +103,10 @@ mssql sql-dangerous --query "INSERT INTO Users (Name, Email) VALUES ('Alice', 'a
 mssql sql-dangerous --query "UPDATE Orders SET Status = 'Shipped' WHERE Id = 42" --format json
 mssql sql-dangerous --query "DELETE FROM Sessions WHERE ExpiresAt < GETDATE()" --format json
 mssql sql-dangerous --query "CREATE INDEX IX_Users_Email ON Users(Email)" --format json
+mssql sql-dangerous --file migration.sql --format json
 ```
+
+As with `mssql sql`, use `--query` for inline SQL or `--file` to read from a file (mutually exclusive).
 
 The output includes `rowsAffected` count in addition to any result rows.
 
