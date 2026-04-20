@@ -1,6 +1,6 @@
 ---
 name: youtrack
-description: Manages YouTrack issues, projects, and users via the yt CLI. Use when searching, creating, updating, or commenting on YouTrack issues, listing projects, or checking authenticated user info. Triggers on phrases like "YouTrack issue", "create a ticket", "search issues", "update issue", "add comment to", "list projects".
+description: Manages YouTrack issues, agile boards, projects, and users via the yt CLI. Use when searching, creating, updating, or commenting on YouTrack issues, listing agile boards or projects, assigning an issue to an agile board, or setting a parent issue for feature-based swimlanes. Triggers on phrases like "YouTrack issue", "create a ticket", "search issues", "update issue", "add comment to", "list projects", "list boards", "agile board", or "parent issue".
 compatibility: Requires yt CLI installed (npm install -g @billpeet/yt-cli) and configured (yt setup --url <url> --token <token>), or YOUTRACK_BASE_URL and YOUTRACK_TOKEN environment variables set.
 ---
 
@@ -45,6 +45,7 @@ yt issue get PROJ-123 --format json --pretty
 
 ```bash
 yt issue create --project PROJ --summary "Summary here" --description "Details" --format json
+yt issue create --project PROJ --summary "Summary here" --agile "Continuous Improvement" --parent PROJ-123 --format json
 ```
 
 ### Update an issue
@@ -53,9 +54,10 @@ yt issue create --project PROJ --summary "Summary here" --description "Details" 
 yt issue update PROJ-123 --summary "New summary" --format json
 yt issue update PROJ-123 --description "Updated description" --format json
 yt issue update PROJ-123 --field "Priority=Critical" --field "State=In Progress" --format json
+yt issue update PROJ-123 --agile "Continuous Improvement" --parent PROJ-456 --format json
 ```
 
-Custom fields use `--field "Name=Value"` and can be repeated for multiple fields.
+Custom fields use `--field "Name=Value"` and can be repeated for multiple fields. Use `--agile` to add an issue to a board/current sprint and `--parent` to set the issue as a subtask of another issue for feature-based swimlanes.
 
 ### Comments
 
@@ -73,6 +75,12 @@ yt issue comment PROJ-123 --text "Comment text here" --format json
 
 ```bash
 yt project list --format json --pretty
+```
+
+## Agile Boards
+
+```bash
+yt agile list --format json --pretty
 ```
 
 ## Users
@@ -97,11 +105,17 @@ Use `--top <n>` (default 50) and `--skip <n>` (default 0) on `issue search` for 
 **Find and update an issue:**
 ```bash
 yt issue search "summary: login bug #Unresolved" --format json --top 5
-yt issue update PROJ-42 --field "State=In Progress"
+yt issue update PROJ-42 --field "State=In Progress" --agile "Continuous Improvement"
 yt issue comment PROJ-42 --text "Started investigating — reproducible in staging."
 ```
 
 **Create and confirm:**
 ```bash
 yt issue create --project PROJ --summary "Fix null pointer in auth flow" --description "Stack trace: ..." --format json --pretty
+```
+
+**Assign to a board and feature swimlane:**
+```bash
+yt agile list --format json --pretty
+yt issue update PROJ-42 --agile "Continuous Improvement" --parent PROJ-123 --format json --pretty
 ```
