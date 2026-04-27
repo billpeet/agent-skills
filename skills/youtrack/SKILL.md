@@ -45,14 +45,27 @@ yt issue get PROJ-123 --format json --pretty
 
 ```bash
 yt issue create --project PROJ --summary "Summary here" --description "Details" --format json
+yt issue create --project PROJ --summary "Summary here" --description "First paragraph\n\nScope:\n- Item one\n- Item two" --format json
 yt issue create --project PROJ --summary "Summary here" --agile "Continuous Improvement" --parent PROJ-123 --format json
 ```
+
+#### Multiline descriptions and comments
+
+When creating or updating issue descriptions, or adding comments, preserve paragraph and list formatting by using escaped newline sequences (`\n`) inside the quoted argument:
+
+```bash
+yt issue create --project PROJ --summary "Example" --description "First paragraph\n\nScope:\n- Item one\n- Item two" --format json
+yt issue comment PROJ-123 --text "Implemented changes:\n- Added API endpoint\n- Updated tests" --format json
+```
+
+Do **not** double-escape newlines as `\\n` unless you intentionally want the literal text `\n` to appear in YouTrack. The `yt` CLI converts `\n` to real newlines before sending text to YouTrack. Literal shell newlines are also acceptable if your shell/tooling supports them, but escaped `\n` is the safest portable form for agents.
 
 ### Update an issue
 
 ```bash
 yt issue update PROJ-123 --summary "New summary" --format json
 yt issue update PROJ-123 --description "Updated description" --format json
+yt issue update PROJ-123 --description "First paragraph\n\nScope:\n- Item one\n- Item two" --format json
 yt issue update PROJ-123 --field "Priority=Critical" --field "State=In Progress" --format json
 yt issue update PROJ-123 --agile "Continuous Improvement" --parent PROJ-456 --format json
 ```
