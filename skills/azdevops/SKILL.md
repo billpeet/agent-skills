@@ -145,6 +145,41 @@ azdevops work-item query --wiql "SELECT [System.Id], [System.Title] FROM WorkIte
 azdevops work-item query --wiql "SELECT [System.Id] FROM WorkItems WHERE [System.WorkItemType] = 'Bug' AND [System.State] <> 'Closed'" --top 20 --format json
 ```
 
+## Newlines in arguments
+
+The CLI accepts **real newlines** in argument values. Do NOT use literal `\n` escape sequences — they will be passed through as the two characters `\` and `n`, not as actual line breaks.
+
+To include newlines in `--description`, `--title`, or any other argument, use a shell heredoc or ANSI-C quoting:
+
+**Correct — ANSI-C quoting (bash `$'...'`):**
+```bash
+azdevops pr create --repo my-repo --source feature/x --target main --title 'Feature X' --description $'First line.\n\nSecond paragraph.\n\nThird paragraph.' --format json
+```
+
+**Correct — heredoc via command substitution:**
+```bash
+azdevops pr create --repo my-repo --source feature/x --target main --title 'Feature X' --description "$(cat <<'EOF'
+First line.
+
+Second paragraph.
+
+Third paragraph.
+EOF
+)" --format json
+```
+
+**Wrong — literal backslash-n (will NOT produce newlines):**
+```bash
+# BAD: \n is passed as literal text, not a newline
+azdevops pr create --repo my-repo --source feature/x --target main --title 'Feature X' --description 'First line.\n\nSecond paragraph.' --format json
+```
+
+**Wrong — double-escaped (will NOT produce newlines):**
+```bash
+# BAD: \\n is passed as literal text
+azdevops pr create --repo my-repo --source feature/x --target main --title 'Feature X' --description 'First line.\\n\\nSecond paragraph.' --format json
+```
+
 ## Output format
 
 All commands support `--format json` (compact) or `--format text` (human-readable tables). Add `--pretty` for indented JSON.
